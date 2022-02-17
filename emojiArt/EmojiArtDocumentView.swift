@@ -40,7 +40,7 @@ struct EmojiArtDocumentView: View {
                 document.addEmoji(
                     String(emoji),
                     at: convertToEmojiCoordinate(location, in: geometry),
-                    size: defaultEmojiFontSize
+                    size: defaultEmojiFontSize * 2
                 )
             }
         }
@@ -88,11 +88,9 @@ struct ScrollingEmojisView : View {
     
     var body : some View {
         ScrollView(.vertical){
-            VStack {
-                ForEach(emojis.map { String($0)}, id: \.self) { emoji in
-                    Text(emoji)
-                        .onDrag{ NSItemProvider(object: emoji as NSString) }
-                }
+            ForEach(emojis.map { String($0)}, id: \.self) { emoji in
+                Text(emoji)
+                    .onDrag{ NSItemProvider(object: emoji as NSString) }
             }
         }
     }
