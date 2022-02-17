@@ -12,9 +12,9 @@ struct EmojiArtDocumentView: View {
     var document: EmojiArtDocument
     
     var body: some View {
-        VStack (spacing: 0){
+        HStack (spacing: 0){
+            palete.frame(width: 100)
             documentBody
-            palete
         }
     }
     
@@ -87,8 +87,8 @@ struct ScrollingEmojisView : View {
     let emojis: String
     
     var body : some View {
-        ScrollView(.horizontal){
-            HStack {
+        ScrollView(.vertical){
+            VStack {
                 ForEach(emojis.map { String($0)}, id: \.self) { emoji in
                     Text(emoji)
                         .onDrag{ NSItemProvider(object: emoji as NSString) }
