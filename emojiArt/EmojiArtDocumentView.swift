@@ -13,7 +13,7 @@ struct EmojiArtDocumentView: View {
     
     var body: some View {
         HStack (spacing: 0){
-            palete.frame(width: 100)
+            palete.frame(width: 100).zIndex(1.0)
             documentBody
         }
     }
@@ -21,7 +21,13 @@ struct EmojiArtDocumentView: View {
     var documentBody : some View {
         GeometryReader { geometry in
             ZStack {
-                Color.yellow
+                Color.white.overlay(
+                    OptionalImage(uiImage: document.backgroundImage)
+                        .position(convertFromEmojiCoordinate((0, 0), in: geometry))
+                )
+                if document.backgroundStatus == .fetching {
+                    ProgressView().scaleEffect(2)
+                }
                 ForEach(document.emojis) { emoji in
                     Text(emoji.text)
                         .font(.system(size: fontSize(for: emoji)))
@@ -92,7 +98,7 @@ struct EmojiArtDocumentView: View {
             .font(.system(size:defaultEmojiFontSize))
     }
     
-    let testEmojis = "🧳 🌂 ☂️ 🧵 🪡 🪢 🧶 👓 🕶 🥽 🥼 🦺 👔 👕 👖 🧣 🧤 🧥 🧦 👗 👘 🥻 🩴 🩱 🩲 🩳 👙 👚 👛 👜 👝 🎒 👞 👟 🥾 🥿 👠 👡 🩰 👢 👑 👒 🎩 🎓 🧢 ⛑ 🪖 💄 💍 💼"
+    let testEmojis = "🧳🌂☂️🧵"
     
 }
 

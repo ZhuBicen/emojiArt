@@ -12,12 +12,47 @@ import SwiftUI
 
 class EmojiArtDocument: ObservableObject
 {
-    @Published private(set) var emojiArt: EmojiArtModel
+    @Published private(set) var emojiArt: EmojiArtModel {
+        didSet {
+            if emojiArt.background != oldValue.background {
+                fetchBackgroundImageIfNecessary()
+            }
+        }
+    }
+    enum BackgoundStatus  {
+        case fetching, idle
+    }
+    @Published var backgroundStatus = BackgoundStatus.idle
+    @Published var backgroundImage: UIImage?
     
     init() {
         emojiArt = EmojiArtModel()
         emojiArt.addEmoji("🏀", at: (-200, -100), size: 80)
         emojiArt.addEmoji("🐯", at: (200,  100), size: 80)
+    }
+    
+    func fetchBackgroundImageIfNecessary() {
+        backgroundImage = nil
+        backgroundStatus = .fetching
+        switch(emojiArt.background) {
+        case .url(let url):
+            DispatchQueue.global(qos: .userInitiated).async {
+                let imageData = try? Data(contentsOf: url)
+                if imageData != nil {
+                    DispatchQueue.main.async {[weak self] in
+                        self? .backgroundStatus = .idle
+                        if self? .emojiArt.background == EmojiArtModel.Background.url(url) {
+                            self? .backgroundImage = UIImage(data: imageData!)
+                        }
+                    }
+                }
+            }
+
+        case .imageData(let data):
+            backgroundImage = UIImage(data: data)
+        case .blank:
+            break
+        }
     }
     
     var emojis: [EmojiArtModel.Emoji] {

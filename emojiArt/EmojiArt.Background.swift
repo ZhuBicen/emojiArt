@@ -8,8 +8,8 @@
 import Foundation
 
 
-extension EmojiArtModel {
-    enum Background {
+extension EmojiArtModel  {
+    enum Background : Equatable {
         case blank
         case url(URL)
         case imageData(Data)
