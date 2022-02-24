@@ -32,10 +32,16 @@ struct EmojiArtDocumentView: View {
                     ProgressView().scaleEffect(2)
                 }
                 ForEach(document.emojis) { emoji in
-                    Text(emoji.text)
-                        .font(.system(size: fontSize(for: emoji)))
-                        .scaleEffect(zoomScale)
-                        .position(position(for: emoji, in: geometry))
+                    GeometryReader { geometry in
+                        Text(emoji.text)
+                                .font(.system(size: fontSize(for: emoji)))
+                                .scaleEffect(zoomScale)
+                                .position(position(for: emoji, in: geometry))
+                                .border(Color.green)
+                                .onTapGesture {
+                                    // TODO: 
+                                }
+                    }
                     
                 }
             }
@@ -103,7 +109,6 @@ struct EmojiArtDocumentView: View {
     private func zoomGesture() -> some Gesture {
         MagnificationGesture()
             .updating($gestureZoomScale) { latestGestureScale, gestureZoomScale, transaction in
-                print("updating \(latestGestureScale)")
                 gestureZoomScale = latestGestureScale
             }
             .onEnded { gestureScaleAtEnd in
@@ -176,8 +181,26 @@ struct ScrollingEmojisView : View {
     }
 }
 
+
+struct Highlight: ViewModifier {
+    
+    func body(content: Content) -> some View {
+        content.border(Color.blue)
+    }
+    
+}
+
+extension View {
+    func highlight() -> some View {
+        self.modifier(Highlight())
+    }
+    
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         EmojiArtDocumentView(document: EmojiArtDocument())
     }
 }
+
+
