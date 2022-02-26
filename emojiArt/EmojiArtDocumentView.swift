@@ -32,25 +32,31 @@ struct EmojiArtDocumentView: View {
                     ProgressView().scaleEffect(2)
                 }
                 ForEach(document.emojis) { emoji in
-                    GeometryReader { geometry in
-                        Text(emoji.text)
-                                .font(.system(size: fontSize(for: emoji)))
+                    Text(emoji.text)
+                        .font(.system(size: fontSize(for: emoji)))
+                        .scaleEffect(zoomScale)
+                        .position(position(for: emoji, in: geometry))
+                        .overlay(
+                            document.isEmojiSelected(emoji) ?
+                            Rectangle()
+                                .strokeBorder()
+                                .frame(width: fontSize(for: emoji), height: fontSize(for: emoji), alignment: .bottom)
                                 .scaleEffect(zoomScale)
-                                .position(position(for: emoji, in: geometry))
-                                .border(Color.green)
-                                .onTapGesture {
-                                    // TODO: 
-                                }
-                    }
-                    
+                                .position(position(for: emoji, in: geometry)) : nil)
+                        .onTapGesture {
+                            document.toggleSelectedEmoji(emoji)
+                        }
                 }
             }
             .clipped()
             .onDrop(of: [.plainText, .url, .image], isTargeted: nil) { providers, location in
                 return drop(providers: providers, at: location, in: geometry);
             }
+            .onTapGesture {
+                document.deselectAllEmojis()
+            }
             .gesture(panGesture().simultaneously(with: zoomGesture()))
-
+            
         }
     }
     

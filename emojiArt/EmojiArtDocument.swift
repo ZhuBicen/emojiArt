@@ -24,6 +24,8 @@ class EmojiArtDocument: ObservableObject
     }
     @Published var backgroundStatus = BackgoundStatus.idle
     @Published var backgroundImage: UIImage?
+    @Published
+    var selectedEmojiIds: Set<Int> = []
     
     init() {
         emojiArt = EmojiArtModel()
@@ -58,8 +60,29 @@ class EmojiArtDocument: ObservableObject
     var emojis: [EmojiArtModel.Emoji] {
         emojiArt.emojis
     }
+    
     var background: EmojiArtModel.Background {
         emojiArt.background
+    }
+    
+    func isEmojiSelected(_ emoji: EmojiArtModel.Emoji) -> Bool {
+        selectedEmojiIds.contains(emoji.id)
+    }
+    
+    func toggleSelectedEmoji(_ emoji: EmojiArtModel.Emoji) {
+        if isEmojiSelected(emoji) {
+            deselectEmoji(emoji)
+        } else {
+            selectedEmojiIds.insert(emoji.id)
+        }
+    }
+    
+    func deselectEmoji(_ emoji: EmojiArtModel.Emoji) {
+        selectedEmojiIds.remove(emoji.id)
+    }
+    
+    func deselectAllEmojis() {
+        selectedEmojiIds = []
     }
     
     // MARK: - Intent(s)
