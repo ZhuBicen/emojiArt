@@ -43,6 +43,7 @@ struct EmojiArtDocumentView: View {
                                 .frame(width: fontSize(for: emoji), height: fontSize(for: emoji), alignment: .bottom)
                                 .scaleEffect(zoomScale)
                                 .position(position(for: emoji, in: geometry)) : nil)
+                        .gesture(emojiDragGesture)
                         .onTapGesture {
                             document.toggleSelectedEmoji(emoji)
                         }
@@ -105,6 +106,21 @@ struct EmojiArtDocumentView: View {
                 steadyStatePanOffset = steadyStatePanOffset + (finalDragGestureValue.translation / zoomScale)
             }
     }
+    
+    @State var emojiDraggingOffset: CGSize = .zero
+    var emojiDragGesture : some Gesture {
+        DragGesture()
+            .onChanged {
+                gesture in
+                    emojiDraggingOffset = gesture.translation
+                    document.updateEmoji(by: emojiDraggingOffset, emojiId: 1)
+            }
+            .onEnded {
+                _ in
+                    print("Stop dragging")
+            }
+    }
+    
     @State private var steadyZoomStyle: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
     

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 
 struct EmojiArtModel {
@@ -36,6 +37,17 @@ struct EmojiArtModel {
     mutating func addEmoji(_ text: String, at location: (x: Int, y: Int), size: Int) {
         uniqueEmojiId += 1
         emojis.append(Emoji(text: text, x: location.x, y: location.y, size: size, id: uniqueEmojiId))
+        
+    }
+    
+    mutating func updateEmoji(by offset: CGSize, emojiId: Int) {
+        for (index, value) in emojis.enumerated() {
+            if value.id == emojiId {
+                emojis[index].x += Int(offset.width)
+                emojis[index].y += Int(offset.height)
+                break
+            }
+        }
         
     }
 }
