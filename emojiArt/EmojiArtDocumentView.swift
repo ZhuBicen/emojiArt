@@ -43,7 +43,7 @@ struct EmojiArtDocumentView: View {
                                 .frame(width: fontSize(for: emoji), height: fontSize(for: emoji), alignment: .bottom)
                                 .scaleEffect(zoomScale)
                                 .position(position(for: emoji, in: geometry)) : nil)
-                        .gesture(emojiDragGesture)
+                        .gesture(emojiDragGesture(for: emoji.id))
                         .onTapGesture {
                             document.toggleSelectedEmoji(emoji)
                         }
@@ -93,6 +93,9 @@ struct EmojiArtDocumentView: View {
     @State private var steadyStatePanOffset: CGSize = CGSize.zero
     @GestureState private var geasturePanOffset: CGSize = CGSize.zero
     
+    @State private var steadyDragOffset: CGSize = .zero
+    @GestureState private var gestureDragOffset: CGSize = CGSize.zero
+    
     private var panOffset: CGSize {
         (steadyStatePanOffset + geasturePanOffset) * zoomScale
     }
@@ -108,16 +111,21 @@ struct EmojiArtDocumentView: View {
     }
     
     @State var emojiDraggingOffset: CGSize = .zero
-    var emojiDragGesture : some Gesture {
+    func emojiDragGesture(for id: Int) -> some Gesture {
         DragGesture()
-            .onChanged {
+//            .updating($gestureDragOffset) { latestDragGestureValue, gestureDragOffset, _ in
+//                gestureDragOffset = latestDragGestureValue.translation / zoomScale
+//                document.updateEmoji(by: gestureDragOffset, emojiId: id)
+//            }
+//            .onChanged {
+//                gesture in
+//                    emojiDraggingOffset = gesture.translation
+//                    document.updateEmoji(by: emojiDraggingOffset, emojiId: id)
+//            }
+            .onEnded {
                 gesture in
                     emojiDraggingOffset = gesture.translation
-                    document.updateEmoji(by: emojiDraggingOffset, emojiId: 1)
-            }
-            .onEnded {
-                _ in
-                    print("Stop dragging")
+                    document.updateEmoji(by: emojiDraggingOffset, emojiId: id)
             }
     }
     
