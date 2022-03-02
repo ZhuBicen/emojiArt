@@ -43,7 +43,7 @@ struct EmojiArtDocumentView: View {
                                 .frame(width: fontSize(for: emoji), height: fontSize(for: emoji), alignment: .bottom)
                                 .scaleEffect(zoomScale)
                                 .position(position(for: emoji, in: geometry)) : nil)
-                        .gesture(emojiDragGesture(for: emoji.id))
+                        .gesture(emojiDragGesture(for: emoji.id, in: geometry))
                         .onTapGesture {
                             document.toggleSelectedEmoji(emoji)
                         }
@@ -111,22 +111,21 @@ struct EmojiArtDocumentView: View {
     }
     
     @State var emojiDraggingOffset: CGSize = .zero
-    func emojiDragGesture(for id: Int) -> some Gesture {
+    func emojiDragGesture(for id: Int, in geometry: GeometryProxy) -> some Gesture {
         DragGesture()
 //            .updating($gestureDragOffset) { latestDragGestureValue, gestureDragOffset, _ in
 //                gestureDragOffset = latestDragGestureValue.translation / zoomScale
 //                document.updateEmoji(by: gestureDragOffset, emojiId: id)
 //            }
-//            .onChanged {
+            .onChanged {
+                gesture in
+                    document.updateEmojiPosition(at: convertToEmojiCoordinate(gesture.location, in: geometry), emojiId: id)
+            }
+//            .onEnded {
 //                gesture in
 //                    emojiDraggingOffset = gesture.translation
 //                    document.updateEmoji(by: emojiDraggingOffset, emojiId: id)
 //            }
-            .onEnded {
-                gesture in
-                    emojiDraggingOffset = gesture.translation
-                    document.updateEmoji(by: emojiDraggingOffset, emojiId: id)
-            }
     }
     
     @State private var steadyZoomStyle: CGFloat = 1
@@ -194,7 +193,7 @@ struct EmojiArtDocumentView: View {
             .font(.system(size:defaultEmojiFontSize))
     }
     
-    let testEmojis = "🧳🌂☂️🧵"
+    let testEmojis = "🧳🌂☂️🧵🍏🍎🍐🍊🍋🍌🍉🍓🫐🍈🍒🍑🥭🍍🥥🥝🍅🍆🥑🥦🥬🥒🌶🫑🌽🥕🫒🧄🧅"
     
 }
 

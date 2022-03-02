@@ -100,6 +100,10 @@ class EmojiArtDocument: ObservableObject
         emojiArt.updateEmoji(by: offset, emojiId: emojiId)
     }
     
+    func updateEmojiPosition(at location: (x: Int, y: Int), emojiId: Int) {
+        emojiArt.updateEmojiPosition(at: location, emojiId: emojiId)
+    }
+    
     func moveEmoji(_ emoji: EmojiArtModel.Emoji, by offset: CGSize) {
         if let index = emojiArt.emojis.index(matching: emoji) {
             emojiArt.emojis[index].x = Int(offset.width)

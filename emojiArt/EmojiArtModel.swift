@@ -48,6 +48,15 @@ struct EmojiArtModel {
                 break
             }
         }
-        
+    }
+    
+    mutating func updateEmojiPosition(at location: (x: Int, y: Int), emojiId: Int) {
+        for (index, value) in emojis.enumerated() {
+            if value.id == emojiId {
+                emojis[index].x = location.x
+                emojis[index].y = location.y
+                break
+            }
+        }
     }
 }
