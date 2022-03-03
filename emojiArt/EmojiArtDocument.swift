@@ -85,6 +85,10 @@ class EmojiArtDocument: ObservableObject
         selectedEmojiIds = []
     }
     
+    func hasSelectedEmojis() -> Bool {
+        !selectedEmojiIds.isEmpty
+    }
+    
     // MARK: - Intent(s)
     
     func setBackground(_ background: EmojiArtModel.Background) {
@@ -96,6 +100,11 @@ class EmojiArtDocument: ObservableObject
         emojiArt.addEmoji(emoji, at: location, size: Int(size))
     }
     
+    func updateSelectedEmojiSize(scale : CGFloat) {
+        for emojiId in selectedEmojiIds {
+            emojiArt.updateEmojiSize(scale: scale, emojiId: emojiId)
+        }
+    }
     func updateEmoji(by offset: CGSize, emojiId: Int) {
         emojiArt.updateEmoji(by: offset, emojiId: emojiId)
     }

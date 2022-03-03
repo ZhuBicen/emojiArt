@@ -59,4 +59,13 @@ struct EmojiArtModel {
             }
         }
     }
+    
+    mutating func updateEmojiSize(scale : CGFloat, emojiId: Int) {
+        for (index, value) in emojis.enumerated() {
+            if value.id == emojiId {
+                emojis[index].size *= Int(scale)
+                break
+            }
+        }
+    }
 }

@@ -34,14 +34,14 @@ struct EmojiArtDocumentView: View {
                 ForEach(document.emojis) { emoji in
                     Text(emoji.text)
                         .font(.system(size: fontSize(for: emoji)))
-                        .scaleEffect(zoomScale)
+                        .scaleEffect(emojiZoomScale(for: emoji))
                         .position(position(for: emoji, in: geometry))
                         .overlay(
                             document.isEmojiSelected(emoji) ?
                             Rectangle()
                                 .strokeBorder()
                                 .frame(width: fontSize(for: emoji), height: fontSize(for: emoji), alignment: .bottom)
-                                .scaleEffect(zoomScale)
+                                .scaleEffect(emojiZoomScale(for: emoji))
                                 .position(position(for: emoji, in: geometry)) : nil)
                         .gesture(emojiDragGesture(for: emoji.id, in: geometry))
                         .onTapGesture {
@@ -131,18 +131,37 @@ struct EmojiArtDocumentView: View {
     @State private var steadyZoomStyle: CGFloat = 1
     @GestureState private var gestureZoomScale: CGFloat = 1
     
+    @GestureState private var emojiGestureZoomScale: CGFloat = 1
+    
     private var zoomScale: CGFloat {
         steadyZoomStyle * gestureZoomScale
     }
     
+    private func emojiZoomScale(for emoji: EmojiArtModel.Emoji) -> CGFloat {
+        if document.isEmojiSelected(emoji) {
+            return steadyZoomStyle * gestureZoomScale * emojiGestureZoomScale
+        }
+        return steadyZoomStyle * gestureZoomScale
+    }
+    
     private func zoomGesture() -> some Gesture {
-        MagnificationGesture()
-            .updating($gestureZoomScale) { latestGestureScale, gestureZoomScale, transaction in
-                gestureZoomScale = latestGestureScale
-            }
-            .onEnded { gestureScaleAtEnd in
-                steadyZoomStyle *= gestureScaleAtEnd
-            }
+        if document.hasSelectedEmojis() {
+            return MagnificationGesture()
+                .updating($emojiGestureZoomScale) { latestGestureScale, gestureZoomScale, transaction in
+                    gestureZoomScale = latestGestureScale
+                }
+                .onEnded { gestureScaleAtEnd in
+                    document.updateSelectedEmojiSize(scale: gestureScaleAtEnd)
+                }
+        } else {
+            return MagnificationGesture()
+                .updating($gestureZoomScale) { latestGestureScale, gestureZoomScale, transaction in
+                    gestureZoomScale = latestGestureScale
+                }
+                .onEnded { gestureScaleAtEnd in
+                    steadyZoomStyle *= gestureScaleAtEnd
+                }
+        }
     }
     
     private func doubleTapeZoom(in size: CGSize) -> some Gesture {
