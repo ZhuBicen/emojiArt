@@ -39,12 +39,13 @@ struct EmojiArtDocumentView: View {
                         .overlay(
                             document.isEmojiSelected(emoji) ?
                             Rectangle()
-                                .strokeBorder()
+                                .stroke(Color.blue, lineWidth: 2)
                                 .frame(width: fontSize(for: emoji), height: fontSize(for: emoji), alignment: .bottom)
                                 .scaleEffect(emojiZoomScale(for: emoji))
                                 .position(position(for: emoji, in: geometry)) : nil)
                         .gesture(emojiDragGesture(for: emoji.id, in: geometry))
                         .onTapGesture {
+                            print("Touch emoji \(emoji.id)")
                             document.toggleSelectedEmoji(emoji)
                         }
                 }
