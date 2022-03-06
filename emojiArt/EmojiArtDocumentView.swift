@@ -183,17 +183,17 @@ struct EmojiArtDocumentView: View {
         }
     }
     
-    private func convertToEmojiCoordinate(_ location : CGPoint, in geometry: GeometryProxy) -> (x: Int, y: Int) {
+    private func convertToEmojiCoordinate(_ location : CGPoint, in geometry: GeometryProxy) -> (x: CGFloat, y: CGFloat) {
         let center = geometry.frame(in: .local).center
 
         let location = CGPoint(
             x : (location.x - panOffset.width - center.x) / zoomScale,
             y: (location.y - panOffset.height - center.y) / zoomScale
         )
-        return (Int(location.x), Int(location.y))
+        return (location.x, location.y)
         
     }
-    private func convertFromEmojiCoordinate(_ location: (x: Int, y: Int), in geometry: GeometryProxy) -> CGPoint {
+    private func convertFromEmojiCoordinate(_ location: (x: CGFloat, y: CGFloat), in geometry: GeometryProxy) -> CGPoint {
         let center = geometry.frame(in: .local).center
         return CGPoint(
             x: center.x + CGFloat(location.x) * zoomScale + panOffset.width,

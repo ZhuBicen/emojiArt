@@ -16,12 +16,12 @@ struct EmojiArtModel {
     
     struct Emoji : Identifiable, Hashable {
         let text: String
-        var x: Int
-        var y: Int
-        var size: Int
+        var x: CGFloat
+        var y: CGFloat
+        var size: CGFloat
         let id: Int
         
-        fileprivate init(text: String, x: Int, y: Int, size: Int, id: Int) {
+        fileprivate init(text: String, x: CGFloat, y: CGFloat, size: CGFloat, id: Int) {
             self.text = text
             self.x = x
             self.y = y
@@ -34,7 +34,7 @@ struct EmojiArtModel {
     init(){}
     private var uniqueEmojiId = 0
     
-    mutating func addEmoji(_ text: String, at location: (x: Int, y: Int), size: Int) {
+    mutating func addEmoji(_ text: String, at location: (x: CGFloat, y: CGFloat), size: CGFloat) {
         uniqueEmojiId += 1
         emojis.append(Emoji(text: text, x: location.x, y: location.y, size: size, id: uniqueEmojiId))
         
@@ -43,14 +43,14 @@ struct EmojiArtModel {
     mutating func updateEmoji(by offset: CGSize, emojiId: Int) {
         for (index, value) in emojis.enumerated() {
             if value.id == emojiId {
-                emojis[index].x += Int(offset.width)
-                emojis[index].y += Int(offset.height)
+                emojis[index].x += offset.width
+                emojis[index].y += offset.height
                 break
             }
         }
     }
     
-    mutating func updateEmojiPosition(at location: (x: Int, y: Int), emojiId: Int) {
+    mutating func updateEmojiPosition(at location: (x: CGFloat, y: CGFloat), emojiId: Int) {
         for (index, value) in emojis.enumerated() {
             if value.id == emojiId {
                 emojis[index].x = location.x
@@ -63,7 +63,7 @@ struct EmojiArtModel {
     mutating func updateEmojiSize(scale : CGFloat, emojiId: Int) {
         for (index, value) in emojis.enumerated() {
             if value.id == emojiId {
-                emojis[index].size *= Int(scale)
+                emojis[index].size *= scale
                 break
             }
         }
