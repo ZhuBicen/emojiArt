@@ -32,7 +32,7 @@ class EmojiArtDocument: ObservableObject
     
     init() {
         emojiArt = EmojiArtModel()
-        emojiArt.background = .url(URL(string: "https://th.bing.com/th/id/R.1e5c428279abdc7c57e9a433ef942202?rik=cbGijJMhwCfV%2bw&pid=ImgRaw&r=0")!)
+        emojiArt.background = .url(URL(string: "https://i.pinimg.com/736x/eb/30/ae/eb30ae6788b114f92ab8a9c6fbc91c3b--background-clipart-garden-clipart.jpg")!)
         emojiArt.addEmoji("🏀", at: (-200, -100), size: 80)
         emojiArt.addEmoji("🐯", at: (200,  100), size: 80)
     }
@@ -94,6 +94,13 @@ class EmojiArtDocument: ObservableObject
     }
     
     // MARK: - Intent(s)
+    
+    func deleteSelectedEmojis() {
+        print("deleteSelectedEmojis")
+        for emojiId in selectedEmojiIds {
+            emojiArt.deleteEmoji(emojiId)
+        }
+    }
     
     func setBackground(_ background: EmojiArtModel.Background) {
         emojiArt.background = background

@@ -12,9 +12,16 @@ struct EmojiArtDocumentView: View {
     var document: EmojiArtDocument
     
     var body: some View {
-        HStack (spacing: 0){
+        HStack (spacing: 0) {
             palete.frame(width: 100).zIndex(1.0)
-            documentBody
+            ZStack(alignment: .topTrailing) {
+                documentBody
+                Button(action: {
+                    document.deleteSelectedEmojis()
+                }, label:{
+                   Image(systemName: "minus.circle.fill")
+                })
+            }
         }
     }
     

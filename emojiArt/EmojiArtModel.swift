@@ -40,6 +40,11 @@ struct EmojiArtModel {
         
     }
     
+    mutating func deleteEmoji(_ emojiId: Int) {
+        print("Remove emoji id: \(emojiId)")
+        emojis.removeAll{$0.id == emojiId}
+    }
+    
     mutating func updateEmoji(by offset: CGSize, emojiId: Int) {
         for (index, value) in emojis.enumerated() {
             if value.id == emojiId {
