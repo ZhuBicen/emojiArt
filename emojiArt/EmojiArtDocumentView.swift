@@ -14,13 +14,13 @@ struct EmojiArtDocumentView: View {
     var body: some View {
         HStack (spacing: 0) {
             palete.frame(width: 100).zIndex(1.0)
-            ZStack(alignment: .topTrailing) {
+            ZStack(alignment: .bottomTrailing) {
                 documentBody
                 Button(action: {
                     document.deleteSelectedEmojis()
                 }, label:{
-                   Image(systemName: "minus.circle.fill")
-                })
+                    Image(systemName: "trash")
+                }).padding()
             }
         }
     }

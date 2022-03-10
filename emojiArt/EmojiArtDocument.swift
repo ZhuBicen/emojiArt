@@ -96,7 +96,6 @@ class EmojiArtDocument: ObservableObject
     // MARK: - Intent(s)
     
     func deleteSelectedEmojis() {
-        print("deleteSelectedEmojis")
         for emojiId in selectedEmojiIds {
             emojiArt.deleteEmoji(emojiId)
         }
@@ -104,7 +103,6 @@ class EmojiArtDocument: ObservableObject
     
     func setBackground(_ background: EmojiArtModel.Background) {
         emojiArt.background = background
-        print("Set background \(background)")
     }
     
     func addEmoji(_ emoji: String, at location: (x: CGFloat, y: CGFloat), size: CGFloat) {
