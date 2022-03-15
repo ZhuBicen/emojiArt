@@ -30,6 +30,11 @@ class EmojiArtDocument: ObservableObject
     @Published
     var selectedEmojiIds: Set<Int> = []
     
+    private func save(to url: URL) {
+        let data: Data = emojiArt.json()
+        data.write(to: url)
+    }
+    
     init() {
         emojiArt = EmojiArtModel()
         emojiArt.background = .url(URL(string: "https://i.pinimg.com/736x/eb/30/ae/eb30ae6788b114f92ab8a9c6fbc91c3b--background-clipart-garden-clipart.jpg")!)

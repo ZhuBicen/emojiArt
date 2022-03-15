@@ -9,12 +9,12 @@ import Foundation
 import SwiftUI
 
 
-struct EmojiArtModel {
+struct EmojiArtModel: Codable {
     var background = Background.blank
     
     var emojis = [Emoji]()
     
-    struct Emoji : Identifiable, Hashable {
+    struct Emoji : Identifiable, Hashable, Codable {
         let text: String
         var x: CGFloat
         var y: CGFloat
@@ -29,6 +29,10 @@ struct EmojiArtModel {
             self.id = id
         }
         
+    }
+    
+    func json() -> Data {
+        return JSONEncoder().encode(self)
     }
     
     init(){}
