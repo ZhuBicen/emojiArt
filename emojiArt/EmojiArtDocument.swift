@@ -15,9 +15,17 @@ class EmojiArtDocument: ObservableObject
     @Published
     private(set) var emojiArt: EmojiArtModel {
         didSet {
+            scheduleAutoSave()
             if emojiArt.background != oldValue.background {
                 fetchBackgroundImageIfNecessary()
             }
+        }
+    }
+    private var autosaveTimer: Timer?
+    private func scheduleAutoSave() {
+        autosaveTimer?.invalidate()
+        autosaveTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { _ in
+            self.autosave()
         }
     }
     enum BackgoundStatus  {
@@ -63,10 +71,12 @@ class EmojiArtDocument: ObservableObject
     }
     
     init() {
-        emojiArt = EmojiArtModel()
-        emojiArt.background = .url(URL(string: "https://i.pinimg.com/736x/eb/30/ae/eb30ae6788b114f92ab8a9c6fbc91c3b--background-clipart-garden-clipart.jpg")!)
-        emojiArt.addEmoji("🏀", at: (-200, -100), size: 80)
-        emojiArt.addEmoji("🐯", at: (200,  100), size: 80)
+        if let url = Autosave.url, let autosaveEmojiArt = try? EmojiArtModel(url: url) {
+            emojiArt = autosaveEmojiArt
+            fetchBackgroundImageIfNecessary()
+        } else {
+            emojiArt = EmojiArtModel()
+        }
     }
     
     func fetchBackgroundImageIfNecessary() {
