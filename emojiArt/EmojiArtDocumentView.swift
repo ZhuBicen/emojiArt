@@ -12,8 +12,7 @@ struct EmojiArtDocumentView: View {
     var document: EmojiArtDocument
     
     var body: some View {
-        HStack (spacing: 0) {
-            palete.frame(width: 100).zIndex(1.0)
+        VStack (spacing: 0) {
             ZStack(alignment: .bottomTrailing) {
                 documentBody
                 Button(action: {
@@ -22,6 +21,7 @@ struct EmojiArtDocumentView: View {
                     Image(systemName: "trash")
                 }).padding()
             }
+            palete.frame(height: 100).zIndex(1.0)
         }
     }
     
@@ -213,7 +213,7 @@ struct EmojiArtDocumentView: View {
         
     }
     
-    let defaultEmojiFontSize: CGFloat = 40
+    let defaultEmojiFontSize: CGFloat = 30
     
     var palete : some View {
         ScrollingEmojisView(emojis: testEmojis)
@@ -228,10 +228,12 @@ struct ScrollingEmojisView : View {
     let emojis: String
     
     var body : some View {
-        ScrollView(.vertical){
-            ForEach(emojis.map { String($0)}, id: \.self) { emoji in
-                Text(emoji)
-                    .onDrag{ NSItemProvider(object: emoji as NSString) }
+        ScrollView(.horizontal){
+            HStack{
+                ForEach(emojis.map { String($0)}, id: \.self) { emoji in
+                    Text(emoji)
+                        .onDrag{ NSItemProvider(object: emoji as NSString) }
+                }
             }
         }
     }
