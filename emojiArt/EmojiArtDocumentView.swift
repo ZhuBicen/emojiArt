@@ -21,7 +21,7 @@ struct EmojiArtDocumentView: View {
                     Image(systemName: "trash")
                 }).padding()
             }
-            palete.frame(height: 100).zIndex(1.0)
+            PalleteChooser()
         }
     }
     
@@ -86,7 +86,8 @@ struct EmojiArtDocumentView: View {
                     document.addEmoji(
                         String(emoji),
                         at: convertToEmojiCoordinate(location, in: geometry),
-                        size: defaultEmojiFontSize * 2
+                        // default emojie front size = 40
+                        size: 40
                     )
                 }
             }
@@ -213,31 +214,11 @@ struct EmojiArtDocumentView: View {
         
     }
     
-    let defaultEmojiFontSize: CGFloat = 30
-    
-    var palete : some View {
-        ScrollingEmojisView(emojis: testEmojis)
-            .font(.system(size:defaultEmojiFontSize))
-    }
-    
-    let testEmojis = "🧳🌂☂️🧵🍏🍎🍐🍊🍋🍌🍉🍓🫐🍈🍒🍑🥭🍍🥥🥝🍅🍆🥑🥦🥬🥒🌶🫑🌽🥕🫒🧄🧅"
+
     
 }
 
-struct ScrollingEmojisView : View {
-    let emojis: String
-    
-    var body : some View {
-        ScrollView(.horizontal){
-            HStack{
-                ForEach(emojis.map { String($0)}, id: \.self) { emoji in
-                    Text(emoji)
-                        .onDrag{ NSItemProvider(object: emoji as NSString) }
-                }
-            }
-        }
-    }
-}
+
 
 
 struct Highlight: ViewModifier {
