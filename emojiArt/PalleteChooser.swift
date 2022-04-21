@@ -18,20 +18,38 @@ struct PalleteChooser: View {
         let palette = store.palette(at: chosenPaletteIndex)
         HStack {
             palleteControlButton
-            ScrollingEmojisView(emojis: palette.emojis)
-                .font(emojiFont)
-            
-        }
+            body(for: palette)
+        }.clipped()
     }
     
     var palleteControlButton: some View {
         Button {
-            chosenPaletteIndex = (chosenPaletteIndex + 1) %  store.palettes.count
+            withAnimation {
+                chosenPaletteIndex = (chosenPaletteIndex + 1) %  store.palettes.count
+            }
         } label: {
             Image(systemName: "paintpalette")
         }
         .font(emojiFont)
     }
+    
+    func body(for palette: Palette) -> some View {
+        HStack {
+            Text(palette.name)
+            ScrollingEmojisView(emojis: palette.emojis)
+                .font(emojiFont)
+        }
+        .id(palette.id)
+        .transition(rollTransition)
+    }
+    
+    var rollTransition: AnyTransition {
+        AnyTransition.asymmetric(
+            insertion: .offset(x: 0, y: emojiFontSize),
+            removal: .offset(x: 0, y: -emojiFontSize)
+        )
+    }
+        
 }
 
 
