@@ -28,8 +28,9 @@ class EmojiArtDocument: ObservableObject
             self.autosave()
         }
     }
-    enum BackgoundStatus  {
+    enum BackgoundStatus: Equatable{
         case fetching, idle
+        case failed(URL)
     }
     @Published
     var backgroundStatus = BackgoundStatus.idle
@@ -91,6 +92,9 @@ class EmojiArtDocument: ObservableObject
                         self? .backgroundStatus = .idle
                         if self? .emojiArt.background == EmojiArtModel.Background.url(url) {
                             self? .backgroundImage = UIImage(data: imageData!)
+                        }
+                        if self?.backgroundImage == nil {
+                            self?.backgroundStatus = .failed(url)
                         }
                     }
                 }

@@ -65,8 +65,31 @@ struct EmojiArtDocumentView: View {
                 document.deselectAllEmojis()
             }
             .gesture(panGesture().simultaneously(with: zoomGesture()))
+            .alert(item: $alertToShow) { alertToShow in
+                alertToShow.alert()
+            }
+            .onChange(of: document.backgroundStatus) { status in
+                switch status {
+                case .failed(let url):
+                    showBackgroundImageFetchFailedAlert(url)
+                default:
+                    break
+                }
+            }
             
         }
+    }
+    
+    @State private var alertToShow : IdentifiableAlert?
+    
+    private func showBackgroundImageFetchFailedAlert(_ url: URL) {
+        alertToShow = IdentifiableAlert(id: "fetch failed:" + url.absoluteString, alert: {
+            Alert(
+                title: Text("background image fetch"),
+                message: Text("Couldn't fetch image from \(url)."),
+                dismissButton: .default(Text("OK"))
+            )
+        })
     }
     
     func drop( providers : [NSItemProvider], at location : CGPoint, in geometry: GeometryProxy) -> Bool {
